@@ -37,21 +37,6 @@ export class Player{
     update(dt){
         this.gunHeight = this.y + 175 + this.groundMargin;
 
-        /*
-        if(this.x + 100 < 0){
-            this.x = -100;
-        }
-        if(this.x + 100 + this.spriteWidth/2 > this.game.canvasWidth){
-            this.x = this.game.canvasWidth - this.spriteWidth/2 - 100;
-        }
-        if(this.y + 110 + this.groundMargin < 0){
-            this.y = - this.groundMargin - 110;
-        }
-        if(this.y + this.groundMargin + 10 + this.spriteHeight + 22 > this.game.canvasHeight - this.spriteHeight/2 - 22){
-            this.y = 55;
-        }
-            */
-
         if(this.ammunition > 10){
             this.ammunition = 10;
         }
@@ -166,6 +151,19 @@ export class Player{
             }
             this.frameTimer = 0;
         }
+
+        if(this.x + 100 < 0){
+            this.x = -100;
+        }
+        if(this.y + this.groundMargin + 115 < 0){
+            this.y = -this.groundMargin - 115;
+        }
+        if((this.x + 100) + (this.spriteWidth/2 - 18) > this.game.canvasWidth){
+            this.x = this.game.canvasWidth - this.spriteWidth/2 - 100 + 18;
+        }
+        if(this.y + this.groundMargin + 115 + this.spriteHeight + 14 > this.game.canvasHeight){
+            this.y = this.game.canvasHeight - 115 - 14 - this.spriteHeight - this.groundMargin;
+        }
     }
     draw(ctx){
         ctx.fillStyle = "yellow";
@@ -188,10 +186,11 @@ export class Player{
                 ctx.fillRect(this.x + this.projectileX, this.gunHeight, 25, 10);
                 this.projectileX += this.projectileSpeed;
             }else{
-                this.projectileX = 175;
+                this.projectileX = 200;
             }
             ctx.restore();
-
+            console.log(this.projectileX);
+            console.log(this.x);
         }else{
             ctx.drawImage(this.currentImage,
                         this.frameX * this.spriteWidth,
@@ -207,21 +206,17 @@ export class Player{
                 ctx.fillRect(this.x + this.projectileX, this.gunHeight, 25, 10);
                 this.projectileX += this.projectileSpeed;
             }else{
-                this.projectileX = 175;
+                this.projectileX = 200;
             }
         }
 
         if(this.game.debugMode === true){
-            ctx.strokeRect(this.x + 100, this.y + this.groundMargin + 110, this.spriteWidth/2, this.spriteHeight + 22);
+            ctx.strokeRect(this.x + 100, this.y + this.groundMargin + 115, this.spriteWidth/2 - 18, this.spriteHeight + 14);
             ctx.strokeRect(this.x + 100, this.gunHeight, 1000, 1);
             ctx.save();
             ctx.strokeStyle = "grey";
             ctx.strokeRect(this.x + 100, this.gunHeight, -1000, 1);
             ctx.restore();
-            if(this.shootingAnimationRunning){
-                ctx.strokeRect(this.x + this.projectileX, this.gunHeight, 25, 10)
-            }
         }
-        ////////////227//////////////////////////////////////////////////////////
     }
 }
