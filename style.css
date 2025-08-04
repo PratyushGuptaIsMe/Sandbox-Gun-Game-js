@@ -1,6 +1,15 @@
-.displaynone{
-    display: none;
+/* ||   CSS IMPORTS   || */
+
+/* ||   RESET   || */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
+
+/* ||   STYLES   || */
+
 #mainCanvas{
     width: 500px;
     height: 500px;
@@ -8,16 +17,18 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    background-color: rgb(132, 169, 169);
+    background-color: rgba(132, 169, 169, 0.195);
     transform: translate(-50%, -50%);
     max-width: 100%;
     max-height: 100%;
 }
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-.imgs{
+
+/* ||   UTILITY CLASSES   || */
+
+.displaynone{
     display: none;
+}
+
+.displayblock{
+    display: block;
 }

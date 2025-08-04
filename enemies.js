@@ -5,8 +5,22 @@ class Enemies{
         this.frameInterval = 1000/this.game.fps;
         this.movementRand = Math.random();
         this.walkLength = 3; //px
+
+        this.hitbox = {
+            x: this.x + 70,
+            y: this.y + 35,
+            w: this.spriteWidth * 2 - 150,
+            h: this.spriteHeight * 2 - 35
+        }
     }
     update(dt){
+        this.hitbox = {
+            x: this.x + 70,
+            y: this.y + 35,
+            w: this.spriteWidth * 2 - 150,
+            h: this.spriteHeight * 2 - 35
+        }
+    
         if(this.frameTimer < this.frameInterval){
             this.frameTimer += dt;
         }else{
@@ -34,9 +48,13 @@ class Enemies{
         ){
             this.y-= this.walkLength;
         }else{
+            this.x = this.x;
+            this.y = this.y;
+        }
+       
+        /*  */
 
-        }
-        }
+    }
     draw(ctx){
         ctx.drawImage(this.image, 
                         this.frameX * this.spriteWidth,
@@ -50,7 +68,7 @@ class Enemies{
                     )
         
         if(this.game.debugMode === true){
-            ctx.strokeRect(this.x, this.y, this.spriteWidth * 2, this.spriteHeight * 2);
+            ctx.strokeRect(this.hitbox.x, this.hitbox.y, this.hitbox.w, this.hitbox.h);
         }
     }
 }

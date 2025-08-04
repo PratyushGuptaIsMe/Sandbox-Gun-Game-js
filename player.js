@@ -10,6 +10,12 @@ export class Player{
         this.frameX = 0;
         this.frameY = 0;
         this.frameTimer = 0;
+        this.hitbox = {
+            x: this.x + 100,
+            y: this.y + this.groundMargin + 115,
+            w: this.spriteWidth/2 - 18,
+            h: this.spriteHeight + 14
+        }
         this.frameInterval = 1000/this.game.fps;
         this.keysPressed = this.game.keysArray;
         this.groundMargin = this.game.groundArea;
@@ -36,6 +42,12 @@ export class Player{
     }
     update(dt){
         this.gunHeight = this.y + 175 + this.groundMargin;
+        this.hitbox = {
+            x: this.x + 100,
+            y: this.y + this.groundMargin + 115,
+            w: this.spriteWidth/2 - 18,
+            h: this.spriteHeight + 14
+        }
 
         if(this.ammunition > 10){
             this.ammunition = 10;
@@ -152,16 +164,16 @@ export class Player{
             this.frameTimer = 0;
         }
 
-        if(this.x + 100 < 0){
+        if(this.hitbox.x < 0){
             this.x = -100;
         }
-        if(this.y + this.groundMargin + 115 < 0){
+        if(this.hitbox.y < 0){
             this.y = -this.groundMargin - 115;
         }
-        if((this.x + 100) + (this.spriteWidth/2 - 18) > this.game.canvasWidth){
+        if((this.hitbox.x) + (this.hitbox.w) > this.game.canvasWidth){
             this.x = this.game.canvasWidth - this.spriteWidth/2 - 100 + 18;
         }
-        if(this.y + this.groundMargin + 115 + this.spriteHeight + 14 > this.game.canvasHeight){
+        if(this.hitbox.y + this.hitbox.h > this.game.canvasHeight){
             this.y = this.game.canvasHeight - 115 - 14 - this.spriteHeight - this.groundMargin;
         }
     }
@@ -172,6 +184,12 @@ export class Player{
             ctx.save();
             ctx.translate(this.game.canvasWidth, 0);
             ctx.scale(-1, 1);
+            if(this.shootingAnimationRunning){
+                ctx.fillRect(this.game.canvasWidth - this.x - this.projectileX, this.gunHeight, 25, 10);
+                this.projectileX -= this.projectileSpeed;
+            }else{
+                this.projectileX = 200;
+            }
             ctx.drawImage(this.currentImage,
                         this.frameX * this.spriteWidth,
                         this.frameY * this.spriteHeight, 
@@ -181,17 +199,15 @@ export class Player{
                         this.y + this.groundMargin,
                         this.spriteWidth*2,
                         this.spriteHeight*2
-                );
+            );
+            ctx.restore();
+        }else{
             if(this.shootingAnimationRunning){
                 ctx.fillRect(this.x + this.projectileX, this.gunHeight, 25, 10);
                 this.projectileX += this.projectileSpeed;
             }else{
                 this.projectileX = 200;
             }
-            ctx.restore();
-            console.log(this.projectileX);
-            console.log(this.x);
-        }else{
             ctx.drawImage(this.currentImage,
                         this.frameX * this.spriteWidth,
                         this.frameY * this.spriteHeight, 
@@ -202,20 +218,15 @@ export class Player{
                         this.spriteWidth*2,
                         this.spriteHeight*2
             );
-            if(this.shootingAnimationRunning){
-                ctx.fillRect(this.x + this.projectileX, this.gunHeight, 25, 10);
-                this.projectileX += this.projectileSpeed;
-            }else{
-                this.projectileX = 200;
-            }
         }
 
         if(this.game.debugMode === true){
-            ctx.strokeRect(this.x + 100, this.y + this.groundMargin + 115, this.spriteWidth/2 - 18, this.spriteHeight + 14);
-            ctx.strokeRect(this.x + 100, this.gunHeight, 1000, 1);
+            ctx.strokeRect(this.hitbox.x, this.hitbox.y, this.hitbox.w, this.hitbox.h);
+            
+            ctx.strokeRect(this.hitbox.x, this.gunHeight, 1000, 1);
             ctx.save();
             ctx.strokeStyle = "grey";
-            ctx.strokeRect(this.x + 100, this.gunHeight, -1000, 1);
+            ctx.strokeRect(this.hitbox.x, this.gunHeight, -1000, 1);
             ctx.restore();
         }
     }

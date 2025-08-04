@@ -16,7 +16,7 @@ export class Grass{
 
         // AI ALERT
 
-        if(this.season === "summer"){
+        /* if(this.season === "summer"){
             // Each tile is now 32x32 (scale 2)
             // Repeat the blob and mixed area pattern to fill the 500x500 canvas (16x16 grid)
             for(let row = 0; row < 16; row++){
@@ -62,6 +62,8 @@ export class Grass{
                     }
                 }
             }
-        }
+        } */
+
+
     }   
 }
