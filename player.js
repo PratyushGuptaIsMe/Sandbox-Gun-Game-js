@@ -10,12 +10,6 @@ export class Player{
         this.frameX = 0;
         this.frameY = 0;
         this.frameTimer = 0;
-        this.hitbox = {
-            x: this.x + 100,
-            y: this.y + this.groundMargin + 115,
-            w: this.spriteWidth/2 - 18,
-            h: this.spriteHeight + 14
-        }
         this.frameInterval = 1000/this.game.fps;
         this.keysPressed = this.game.keysArray;
         this.groundMargin = this.game.groundArea;
@@ -25,7 +19,7 @@ export class Player{
         this.canReload = true;
         this.shootingAnimationRunning = false;
         this.reloadAnimationRunning = false;
-        this.howLongShouldShootingLast = 1000; //ms how long is animation
+        this.howLongShouldShootingLast = 10; //ms how long is animation
         this.howLongShouldReloadingLast = 1000; //ms how long is animation
         this.shootInterval = 1000;  //shooting cooldown
         this.shootTimer = 0;
@@ -34,11 +28,21 @@ export class Player{
         this.replenishThisValueOfAmmo = 2;
         this.projectileX = 200;
         this.projectileSpeed = 8.2;
-        this.walkingSpeed = 5;
+        this.bulletActive = false;
+        this.howLongBulletActive = 2000;
+
+        this.walkingSpeed = 3;
         
         this.gunHeight = this.y + 175 + this.groundMargin;
 
         this.flipImage = false;
+
+        this.hitbox = {
+            x: this.x + 100,
+            y: this.y + this.groundMargin + 115,
+            w: this.spriteWidth/2 - 18,
+            h: this.spriteHeight + 14
+        }
     }
     update(dt){
         this.gunHeight = this.y + 175 + this.groundMargin;
@@ -108,11 +112,9 @@ export class Player{
             this.currentImage = document.getElementById("aimedshotpnd");
             this.canShoot = false;
             this.maxFrameX = 3;
-            if(true /*condition for bulletcollision with enemy*/){
-                //collision detected
-            }else{
-                //collision not detected
-            }
+            this.bulletActive = true;
+            setTimeout(() => {this.bulletActive = false}, this.howLongBulletActive);
+
         }
         if(this.ammunition <= 0){
             this.canShoot = false;
@@ -142,7 +144,7 @@ export class Player{
         }
         if(this.canReload === false &&
             !this.reloadAnimationRunning){
-            if(this.reloadTimer > this.reloadInterval){
+            if(this.reloadTimer >= this.reloadInterval){
                 this.reloadTimer = 0;
                 if(this.ammunition < 10){
                     this.canReload = true;
@@ -184,7 +186,7 @@ export class Player{
             ctx.save();
             ctx.translate(this.game.canvasWidth, 0);
             ctx.scale(-1, 1);
-            if(this.shootingAnimationRunning){
+            if(this.bulletActive){
                 ctx.fillRect(this.game.canvasWidth - this.x - this.projectileX, this.gunHeight, 25, 10);
                 this.projectileX -= this.projectileSpeed;
             }else{
@@ -202,7 +204,7 @@ export class Player{
             );
             ctx.restore();
         }else{
-            if(this.shootingAnimationRunning){
+            if(this.bulletActive){
                 ctx.fillRect(this.x + this.projectileX, this.gunHeight, 25, 10);
                 this.projectileX += this.projectileSpeed;
             }else{
@@ -223,7 +225,7 @@ export class Player{
         if(this.game.debugMode === true){
             ctx.strokeRect(this.hitbox.x, this.hitbox.y, this.hitbox.w, this.hitbox.h);
             
-            ctx.strokeRect(this.hitbox.x, this.gunHeight, 1000, 1);
+            ctx.strokeRect(this.hitbox.x, this.gunHeight, 1000, 1); //line
             ctx.save();
             ctx.strokeStyle = "grey";
             ctx.strokeRect(this.hitbox.x, this.gunHeight, -1000, 1);

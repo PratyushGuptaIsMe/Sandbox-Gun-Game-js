@@ -1,8 +1,10 @@
 class Enemies{
     constructor(game){
         this.game = game;
+        this.markedForDeletion = false;
         this.frameTimer = 0;
         this.frameInterval = 1000/this.game.fps;
+        this.frameX = 0;
         this.movementRand = Math.random();
         this.walkLength = 3; //px
 
@@ -51,8 +53,20 @@ class Enemies{
             this.x = this.x;
             this.y = this.y;
         }
-       
-        /*  */
+
+        //boundary checks Idk if it works tho. Might be wrong
+        if(this.hitbox.x < 0){
+            this.x = -70;
+        }
+        if(this.hitbox.y < 0){
+            this.y = -35;
+        }
+        if((this.hitbox.x) + (this.hitbox.w) > this.game.canvasWidth){
+            this.x = this.game.canvasWidth - (this.spriteWidth * 2 - 150) - 70
+        }
+        if(this.hitbox.y + this.hitbox.h > this.game.canvasHeight){
+            this.y = this.game.canvasHeight - (this.spriteHeight * 2 - 35) - 35
+        }
 
     }
     draw(ctx){
@@ -79,7 +93,6 @@ export class YellowSkeleton extends Enemies{
         this.image = document.getElementById("YellowSkeletonIdle");
         this.spriteWidth = 96;
         this.spriteHeight = 64;
-        this.frameX = 0;
         this.x = 1;
         this.y = 1;
         this.maxFrameX = 7;
@@ -103,8 +116,6 @@ export class WhiteSkeleton extends Enemies{
         this.image = document.getElementById("WhiteSkeletonIdle");
         this.spriteWidth = 96;
         this.spriteHeight = 64;
-        this.frameX = 0;
-        this.frameX = 0;
         this.x = 111;
         this.y = 1;
         this.maxFrameX = 7;

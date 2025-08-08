@@ -6,6 +6,7 @@ window.addEventListener("load", function(){
     const ctx = CANVAS.getContext("2d");
     CANVAS.width = 500;
     CANVAS.height = 500;
+
     class GAME{
         constructor(width, height){
             this.canvasWidth = width;
@@ -16,16 +17,65 @@ window.addEventListener("load", function(){
             this.debugMode = false;
             this.season = "autumn";
 
-            this.allCurrentEnemies = [new YellowSkeleton(this), new WhiteSkeleton(this)];
+            this.allCurrentEnemies = [new WhiteSkeleton(this)];
             this.backgrounds = new Grass(this);
             this.Player = new Player(this);
+
+            this.enemyTimer = 0;
+            this.enemyInterval = 1000;
         }
+
+        #spawnWhiteSkeleton(){
+            this.allCurrentEnemies.push(new WhiteSkeleton(this));
+        }
+        #spawnYellowSkeleton(){
+            this.allCurrentEnemies.push(new YellowSkeleton(this));
+        }
+        spawnEnemy(){
+            let rand = Math.random();
+            if(rand <= 0.20){
+                this.#spawnYellowSkeleton();
+            }else if(rand > 0.20 && rand < 1){
+                this.#spawnWhiteSkeleton();
+            }
+        }
+
+        #enemyCollisionChecks(){
+            this.allCurrentEnemies.forEach((enemy) => {
+
+                if( enemy.hitbox.x < this.Player.hitbox.x + this.Player.hitbox.w &&
+                    enemy.hitbox.x + enemy.hitbox.w > this.Player.hitbox.x &&
+                    enemy.hitbox.y < this.Player.hitbox.y + this.Player.hitbox.h &&
+                    enemy.hitbox.y + enemy.hitbox.h > this.Player.hitbox.y
+                ){
+                    enemy.markedForDeletion = true;
+                }
+
+            })
+        }
+        #enemyOperations(){
+            for(let i = this.allCurrentEnemies.length - 1; i > -1; i--){
+                if(this.allCurrentEnemies[i].markedForDeletion === true){
+                    this.allCurrentEnemies.splice(i, 1);
+                }
+            }
+        }
+
         update(dt){
             this.backgrounds.update(dt);
             this.Player.update(dt);
             this.allCurrentEnemies.forEach((enemy) => {
                 enemy.update(dt);
             });
+            this.#enemyCollisionChecks();
+            this.#enemyOperations();
+
+            if(this.enemyTimer < this.enemyInterval){
+                this.enemyTimer = this.enemyTimer + dt;
+            }else if(this.enemyTimer >= this.enemyInterval){
+                this.spawnEnemy();
+                this.enemyTimer = 0;
+            }
         }
         draw(ctx){
             this.backgrounds.draw(ctx);
@@ -35,7 +85,8 @@ window.addEventListener("load", function(){
             });
         }
     }
-    const game = new GAME(CANVAS.width, CANVAS.height);
+
+    window.game = new GAME(CANVAS.width, CANVAS.height);
 
     let l = 0;
 
