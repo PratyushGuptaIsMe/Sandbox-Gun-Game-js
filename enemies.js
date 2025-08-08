@@ -9,7 +9,7 @@ class Enemies{
         this.y = Math.random() * this.game.canvasHeight + 1;
         this.movementRand = Math.random();
         this.walkLength = 3; //px
-        
+
         this.hitbox = {
             x: this.x + 70,
             y: this.y + 35,
@@ -79,7 +79,6 @@ class Enemies{
         if(this.hitbox.y + this.hitbox.h > this.game.canvasHeight){
             this.y = this.game.canvasHeight - (this.spriteHeight * 2 - 35) - 35
         }
-
     }
     draw(ctx){
         ctx.drawImage(this.image, 

@@ -81,13 +81,7 @@ window.addEventListener("load", function(){
                 }
             })
         }
-        #enemyOperations(){
-            for(let i = this.allCurrentEnemies.length - 1; i > -1; i--){
-                if(this.allCurrentEnemies[i].markedForDeletion === true){
-                    this.allCurrentEnemies.splice(i, 1);
-                }
-            }
-        }
+        
         hurtPlayer(dmg){
             this.health = this.health - dmg;
         }
@@ -100,7 +94,6 @@ window.addEventListener("load", function(){
                 enemy.update(dt);
             });
             this.#enemyCollisionChecks();
-            this.#enemyOperations();
 
             if(this.enemyTimer < this.enemyInterval){
                 this.enemyTimer = this.enemyTimer + dt;
