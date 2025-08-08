@@ -1,6 +1,7 @@
 import { Player } from "./player.js";
 import { YellowSkeleton, WhiteSkeleton } from "./enemies.js";
 import { Grass } from "./backgrounds.js";
+
 window.addEventListener("load", function(){
     const CANVAS = document.getElementById("mainCanvas");
     const ctx = CANVAS.getContext("2d");
@@ -23,13 +24,36 @@ window.addEventListener("load", function(){
 
             this.enemyTimer = 0;
             this.enemyInterval = 1000;
+
+            this.score = 0;
+            this.health = 100;
         }
 
         #spawnWhiteSkeleton(){
-            this.allCurrentEnemies.push(new WhiteSkeleton(this));
+            let newSkelly = new WhiteSkeleton(this);
+            if( newSkelly.hitbox.x < this.Player.hitbox.x + this.Player.hitbox.w &&
+                newSkelly.hitbox.x + newSkelly.hitbox.w > this.Player.hitbox.x &&
+                newSkelly.hitbox.y < this.Player.hitbox.y + this.Player.hitbox.h &&
+                newSkelly.hitbox.y + newSkelly.hitbox.h > this.Player.hitbox.y
+                ){
+                    newSkelly = "";
+                    this.#spawnWhiteSkeleton();
+                }else{
+                    this.allCurrentEnemies.push(newSkelly);
+                }
         }
         #spawnYellowSkeleton(){
-            this.allCurrentEnemies.push(new YellowSkeleton(this));
+            let newSkelly = new YellowSkeleton(this);
+            if( newSkelly.hitbox.x < this.Player.hitbox.x + this.Player.hitbox.w &&
+                newSkelly.hitbox.x + newSkelly.hitbox.w > this.Player.hitbox.x &&
+                newSkelly.hitbox.y < this.Player.hitbox.y + this.Player.hitbox.h &&
+                newSkelly.hitbox.y + newSkelly.hitbox.h > this.Player.hitbox.y
+                ){
+                    newSkelly = "";
+                    this.#spawnYellowSkeleton();
+                }else{
+                    this.allCurrentEnemies.push(newSkelly);
+                }
         }
         spawnEnemy(){
             let rand = Math.random();
@@ -48,9 +72,13 @@ window.addEventListener("load", function(){
                     enemy.hitbox.y < this.Player.hitbox.y + this.Player.hitbox.h &&
                     enemy.hitbox.y + enemy.hitbox.h > this.Player.hitbox.y
                 ){
-                    enemy.markedForDeletion = true;
+                    if(enemy.attackAnimationRunning === false){
+                        enemy.attackAnimationRunning = true;
+                        enemy.frameX = 0;
+                    }
+                }else{
+                    enemy.attackAnimationRunning = false;
                 }
-
             })
         }
         #enemyOperations(){
@@ -60,8 +88,12 @@ window.addEventListener("load", function(){
                 }
             }
         }
+        hurtPlayer(dmg){
+            this.health = this.health - dmg;
+        }
 
         update(dt){
+            console.log(this.health);
             this.backgrounds.update(dt);
             this.Player.update(dt);
             this.allCurrentEnemies.forEach((enemy) => {
@@ -86,7 +118,8 @@ window.addEventListener("load", function(){
         }
     }
 
-    window.game = new GAME(CANVAS.width, CANVAS.height);
+    let game = new GAME(CANVAS.width, CANVAS.height)
+    window.game = game;
 
     let l = 0;
 

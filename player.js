@@ -99,7 +99,7 @@ export class Player{
             !this.reloadAnimationRunning){
                 this.frameX = 0;
                 this.maxFrameX = 2;
-                this.currentImage = document.getElementById("aimedshotpnd");
+                this.currentImage = document.getElementById("aimedshotpng");
                 this.ammunition--;
                 //decrease ammo
                 this.canShoot = false;
@@ -109,7 +109,7 @@ export class Player{
         }
 
         if(this.shootingAnimationRunning){
-            this.currentImage = document.getElementById("aimedshotpnd");
+            this.currentImage = document.getElementById("aimedshotpng");
             this.canShoot = false;
             this.maxFrameX = 3;
             this.bulletActive = true;
