@@ -79,7 +79,27 @@ window.addEventListener("load", function(){
                 }else{
                     enemy.attackAnimationRunning = false;
                 }
-            })
+                
+                if( enemy.hitbox.x < this.Player.x + this.Player.projectileX + 25 &&
+                    enemy.hitbox.x + enemy.hitbox.w > this.Player.x + this.Player.projectileX &&
+                    enemy.hitbox.y < this.Player.gunHeight + 10 &&
+                    enemy.hitbox.y + enemy.hitbox.h > this.Player.gunHeight
+                ){
+                    if(enemy.markedForDeletion === false){
+                        enemy.markedForDeletion = true;
+                        enemy.frameX = 0;
+                    }
+                }
+
+            });
+
+            this.allCurrentEnemies = this.allCurrentEnemies.filter(enemy => {
+                                        if(enemy.killEnemy){
+                                            return false;
+                                        }else{
+                                            return true;
+                                        }
+                                    });
         }
         
         hurtPlayer(dmg){
@@ -87,7 +107,6 @@ window.addEventListener("load", function(){
         }
 
         update(dt){
-            console.log(this.health);
             this.backgrounds.update(dt);
             this.Player.update(dt);
             this.allCurrentEnemies.forEach((enemy) => {

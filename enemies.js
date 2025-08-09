@@ -2,6 +2,7 @@ class Enemies{
     constructor(game){
         this.game = game;
         this.markedForDeletion = false;
+        this.killEnemy = false;
         this.frameTimer = 0;
         this.frameInterval = 1000/this.game.fps * 2;
         this.frameX = 0;
@@ -27,6 +28,16 @@ class Enemies{
             h: this.spriteHeight * 2 - 35
         }
     
+
+        if(this.markedForDeletion === true){
+            this.image = this.deathanimation;
+            if(this.frameX === this.maxFrameX){
+                this.killEnemy = true;
+            }
+        }else if(this.markedForDeletion === false){
+
+
+
         if(this.frameTimer < this.frameInterval){
             this.frameTimer += dt;
         }else{
@@ -64,6 +75,9 @@ class Enemies{
             this.frameX === this.maxFrameX
         ){
             this.game.hurtPlayer(this.attackDmg);
+        }
+
+
         }
 
         //boundary checks Idk if it works tho. Might be wrong
@@ -106,6 +120,8 @@ export class YellowSkeleton extends Enemies{
         this.spriteHeight = 64;
         this.maxFrameX = 7;
         this.attackDmg = 2;
+
+        this.deathanimation = document.getElementById("YellowSkeletonDie");
     }
     update(dt){
         super.update(dt);
@@ -136,6 +152,8 @@ export class WhiteSkeleton extends Enemies{
         this.spriteHeight = 64;
         this.maxFrameX = 7;
         this.attackDmg = 1;
+
+        this.deathanimation = document.getElementById("WhiteSkeletonDie");
     }
     update(dt){
         super.update(dt);
